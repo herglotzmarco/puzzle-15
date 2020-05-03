@@ -1,3 +1,8 @@
+package de.herglotz.puzzle;
+
+import de.herglotz.puzzle.data.Permutation;
+import de.herglotz.puzzle.solver.Puzzle;
+
 public class PuzzleRunner {
 
 	public static final int CONCURRENCY = 8;

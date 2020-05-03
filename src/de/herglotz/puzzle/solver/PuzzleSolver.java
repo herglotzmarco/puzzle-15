@@ -1,5 +1,10 @@
+package de.herglotz.puzzle.solver;
+
 import java.util.LinkedList;
 import java.util.List;
+
+import de.herglotz.puzzle.data.Permutation;
+import de.herglotz.puzzle.data.PuzzleState;
 
 public class PuzzleSolver implements Runnable {
 

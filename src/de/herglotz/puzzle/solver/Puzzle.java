@@ -1,5 +1,11 @@
+package de.herglotz.puzzle.solver;
+
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
+
+import de.herglotz.puzzle.PuzzleRunner;
+import de.herglotz.puzzle.data.Permutation;
+import de.herglotz.puzzle.data.PuzzleState;
 
 public class Puzzle {
 
