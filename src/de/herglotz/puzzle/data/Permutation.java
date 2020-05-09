@@ -3,30 +3,35 @@ package de.herglotz.puzzle.data;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 public class Permutation {
 
-	private final List<Integer> list;
+	public static final byte EMPTY_SPACE = 16;
+
+	private final byte[] list;
 	private final int steps;
 
 	public static Permutation of(Integer... list) {
-		return new Permutation(list, 0);
+		return new Permutation(intToByte(list), 0);
 	}
 
-	public Permutation(Integer[] list, int steps) {
-		this(Arrays.asList(list), steps);
+	private static byte[] intToByte(Integer[] list) {
+		byte[] result = new byte[list.length];
+		for (int i = 0; i < result.length; i++) {
+			result[i] = list[i].byteValue();
+		}
+		return result;
 	}
 
-	public Permutation(List<Integer> list, int steps) {
+	public Permutation(byte[] list, int steps) {
 		this.list = list;
 		this.steps = steps;
 	}
 
 	public List<Permutation> performAllPossibleMoves() {
 		List<Permutation> result = new ArrayList<>();
-		int emptySpaceIndex = list.indexOf(16);
+		int emptySpaceIndex = findIndexOf(EMPTY_SPACE);
 
 		swapIfPossible(emptySpaceIndex, emptySpaceIndex - 1).ifPresent(result::add);
 		swapIfPossible(emptySpaceIndex, emptySpaceIndex + 1).ifPresent(result::add);
@@ -36,19 +41,28 @@ public class Permutation {
 		return result;
 	}
 
+	private int findIndexOf(byte value) {
+		for (int i = 0; i < list.length; i++) {
+			if (list[i] == value) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
 	private Optional<Permutation> swapIfPossible(int emptySpaceIndex, int swapIndex) {
-		if (swapIndex >= 0 && swapIndex < list.size()) {
+		if (swapIndex >= 0 && swapIndex < list.length) {
 			return Optional.of(swap(emptySpaceIndex, swapIndex));
 		}
 		return Optional.empty();
 	}
 
 	private Permutation swap(int emptySpaceIndex, int swapIndex) {
-		List<Integer> copy = new ArrayList<>(list);
-		Integer value1 = copy.get(emptySpaceIndex);
-		Integer value2 = copy.get(swapIndex);
-		copy.set(emptySpaceIndex, value2);
-		copy.set(swapIndex, value1);
+		byte[] copy = Arrays.copyOf(list, list.length);
+		byte value1 = copy[emptySpaceIndex];
+		byte value2 = copy[swapIndex];
+		copy[emptySpaceIndex] = value2;
+		copy[swapIndex] = value1;
 		return new Permutation(copy, steps + 1);
 	}
 
@@ -58,7 +72,10 @@ public class Permutation {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(list);
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.hashCode(list);
+		return result;
 	}
 
 	@Override
@@ -73,7 +90,7 @@ public class Permutation {
 			return false;
 		}
 		Permutation other = (Permutation) obj;
-		return Objects.equals(list, other.list);
+		return Arrays.equals(list, other.list);
 	}
 
 	@Override
